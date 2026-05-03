@@ -23,6 +23,9 @@
 *.dll
 *.so.*
 
+# MacOS files
+.DS_Store
+**/.DS_Store
 
 # Fortran module files
 *.mod
@@ -43,6 +46,11 @@
 build/
 Build/
 build-*/
+release/
+Release/
+release-*/
+cmake-build-debug/
+cmake-build-release/
 
 # CMake generated files
 CMakeFiles/
