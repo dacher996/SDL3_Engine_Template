@@ -1,5 +1,7 @@
-#include "Engine/app.h"
-#include "Engine/logger.h"
+#include "Engine/Core/app.h"
+#include "Engine/Core/logger.h"
+#include "Engine/Core/app_context.h"
+
 #include <assert.h>
 
 static Engine::App *s_appHandle = nullptr;
@@ -7,6 +9,10 @@ static Engine::App *s_appHandle = nullptr;
 Engine::App::App(int argc, char *argv[]) : m_window{nullptr, &SDL_DestroyWindow} {
     s_appHandle = this;
     Logger::Init();
+
+    AddLayer(AppContext{
+        .basePath = SDL_GetBasePath(),
+    });
 }
 
 SDL_AppResult Engine::App::Init() {
@@ -40,9 +46,12 @@ SDL_AppResult Engine::App::Event(SDL_Event *event) {
 }
 
 SDL_AppResult Engine::App::Iterate() {
-    float newTime = SDL_GetTicks() / 1000.0f;
-    float deltaTime = newTime - m_lastFrameTime;
-    m_lastFrameTime = newTime;
+    // Calculate delta time
+    {
+        float newTime = SDL_GetTicks() / 1000.0f;
+        GetLayer<AppContext>().deltaTime = newTime - m_lastFrameTime;
+        m_lastFrameTime = newTime;
+    }
 
     return SDL_APP_CONTINUE;
 }

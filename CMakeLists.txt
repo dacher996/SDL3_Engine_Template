@@ -11,11 +11,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(LIBS)
 
 # Source files
+file(GLOB_RECURSE ENGINE_SOURCES src/Engine/*.cpp include/Engine/*.h)
+
 set(SOURCES src/main.cpp
-        src/Engine/app.cpp
-        include/Engine/app.h
-        include/Engine/logger.h
-        src/Engine/logger.cpp
+        ${ENGINE_SOURCES}
 )
 
 # CPM
@@ -39,6 +38,10 @@ list(APPEND LIBS SDL3::SDL3)
 ### spdlog
 CPMAddPackage("gh:gabime/spdlog#a297670")
 list(APPEND LIBS spdlog::spdlog_header_only)
+
+# EnTT
+CPMAddPackage("gh:skypjack/entt@3.16.0")
+list(APPEND LIBS EnTT::EnTT)
 
 ########################################################################
 
