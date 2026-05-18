@@ -1,7 +1,11 @@
 #include "Engine/app.h"
 #include "Engine/logger.h"
+#include <assert.h>
+
+static Engine::App *s_appHandle = nullptr;
 
 Engine::App::App(int argc, char *argv[]) : m_window{nullptr, &SDL_DestroyWindow} {
+    s_appHandle = this;
     Logger::Init();
 }
 
@@ -36,9 +40,18 @@ SDL_AppResult Engine::App::Event(SDL_Event *event) {
 }
 
 SDL_AppResult Engine::App::Iterate() {
+    float newTime = SDL_GetTicks() / 1000.0f;
+    float deltaTime = newTime - m_lastFrameTime;
+    m_lastFrameTime = newTime;
+
     return SDL_APP_CONTINUE;
 }
 
 void Engine::App::Quit(SDL_AppResult result) {
     // Handle resource cleanup here
+}
+
+Engine::App &Engine::App::Get() {
+    assert(s_appHandle);
+    return *s_appHandle;
 }

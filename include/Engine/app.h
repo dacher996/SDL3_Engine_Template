@@ -20,7 +20,10 @@ namespace Engine {
 
         virtual void Quit(SDL_AppResult result);
 
+        static App &Get();
+
     private:
+        float m_lastFrameTime;
         std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> m_window;
     };
 }

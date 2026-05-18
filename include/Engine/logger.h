@@ -25,6 +25,7 @@ namespace Engine {
 #define ENGINE_LOG_WARN(...) ::Engine::Logger::GetCoreLogger()->warn(__VA_ARGS__)
 #define ENGINE_LOG_ERROR(...) ::Engine::Logger::GetCoreLogger()->error(__VA_ARGS__)
 #define ENGINE_LOG_CRITICAL(...) ::Engine::Logger::GetCoreLogger()->critical(__VA_ARGS__)
+#define ENGINE_LOG_SDL_ERROR(msg) ::Engine::Logger::GetCoreLogger()->error(msg "\n\n{}", SDL_GetError())
 
 #define LOG_TRACE(...) ::Engine::Logger::GetClientLogger()->trace(__VA_ARGS__)
 #define LOG_INFO(...) ::Engine::Logger::GetClientLogger()->info(__VA_ARGS__)
@@ -39,6 +40,7 @@ namespace Engine {
 #define ENGINE_LOG_WARN
 #define ENGINE_LOG_ERROR
 #define ENGINE_LOG_CRITICAL
+#define ENGINE_LOG_SDL_ERROR
 
 #define LOG_TRACE
 #define LOG_INFO

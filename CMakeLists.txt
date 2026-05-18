@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.30)
-project(Engine)
+project(YourProject) # <--- Update this to change the name of your project
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
@@ -49,7 +49,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBS})
 target_include_directories(${PROJECT_NAME} PRIVATE include)
 
 # Copy assets
-file(COPY Assets DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+file(COPY assets DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 target_compile_definitions(${PROJECT_NAME}
         PRIVATE
