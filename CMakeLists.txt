@@ -15,6 +15,11 @@ file(GLOB_RECURSE ENGINE_SOURCES src/Engine/*.cpp include/Engine/*.h)
 
 set(SOURCES src/main.cpp
         ${ENGINE_SOURCES}
+        include/Engine/Core/scene_interface.h
+        include/Engine/Core/app_event.h
+        include/Engine/Layers/scene_manager.h
+        include/Engine/Core/layer_interface.h
+        src/Engine/Layers/scene_manager.cpp
 )
 
 # CPM
