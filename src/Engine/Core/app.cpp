@@ -2,35 +2,70 @@
 #include "Engine/Core/logger.h"
 #include "Engine/Core/app_context.h"
 
-#include <assert.h>
+#include <cassert>
 
+#include "Engine/Core/defines.h"
+#include "Engine/Layers/graphics_pipeline_manager.h"
 #include "Engine/Layers/scene_manager.h"
+#include "Engine/Layers/texture_manager.h"
+#include "Engine/Layers/texture_sampler_manager.h"
+#include "Engine/Rendering/2D/renderer_2d.h"
 
 static Engine::App *s_appHandle = nullptr;
 
-Engine::App::App(int argc, char *argv[]) : m_window{nullptr, &SDL_DestroyWindow} {
+Engine::App::App(int argc, char *argv[]) : m_window{nullptr, &SDL_DestroyWindow},
+                                           m_gpuDevice{nullptr, &SDL_DestroyGPUDevice},
+                                           m_lastFrameTime{} {
     s_appHandle = this;
     Logger::Init();
 
     AddLayer(AppContext{
         .basePath = SDL_GetBasePath(),
-        .gameWidth = 320,
-        .gameHeight = 192,
-        .windowWidth = 800,
-        .windowHeight = 600,
+        .logicalWidth = LOGICAL_APP_WIDTH,
+        .logicalHeight = LOGICAL_APP_HEIGHT,
+        .windowWidth = INITIAL_WINDOW_WIDTH,
+        .windowHeight = INITIAL_WINDOW_HEIGHT,
+        .logicalPresentation = LogicalPresentation::Overscan,
     });
 }
 
 SDL_AppResult Engine::App::Init() {
-    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 
     auto &appContext = GetLayer<AppContext>();
-    m_window.reset(SDL_CreateWindow("Project name", appContext.windowWidth, appContext.windowHeight,
+
+    m_gpuDevice.reset(SDL_CreateGPUDevice(
+        SDL_GPU_SHADERFORMAT_MSL | SDL_GPU_SHADERFORMAT_DXIL | SDL_GPU_SHADERFORMAT_SPIRV, true, nullptr));
+    m_window.reset(SDL_CreateWindow(APP_NAME, appContext.windowWidth, appContext.windowHeight,
                                     SDL_WINDOW_RESIZABLE));
 
-    // Register layers
+    if (m_gpuDevice == nullptr || m_window == nullptr ||
+        !SDL_ClaimWindowForGPUDevice(m_gpuDevice.get(), m_window.get())) {
+        ENGINE_LOG_SDL_ERROR("Window creation failed");
+        return SDL_APP_FAILURE;
+    }
+
+    appContext.gpuDevice = m_gpuDevice.get();
+    appContext.window = m_window.get();
+
+    // Setup present mode of the gpu swapchain
     {
-        AddLayer(SceneManager());
+        SDL_GPUPresentMode presentMode = SDL_GPU_PRESENTMODE_VSYNC;
+        if (SDL_WindowSupportsGPUPresentMode(m_gpuDevice.get(), m_window.get(), SDL_GPU_PRESENTMODE_IMMEDIATE)) {
+            presentMode = SDL_GPU_PRESENTMODE_IMMEDIATE;
+        } else if (SDL_WindowSupportsGPUPresentMode(m_gpuDevice.get(), m_window.get(), SDL_GPU_PRESENTMODE_MAILBOX)) {
+            presentMode = SDL_GPU_PRESENTMODE_MAILBOX;
+        }
+        SDL_SetGPUSwapchainParameters(m_gpuDevice.get(), m_window.get(), SDL_GPU_SWAPCHAINCOMPOSITION_SDR, presentMode);
+    }
+
+    // Init Core systems
+    {
+        AddLayer<GraphicsPipelineManager>();
+        AddLayer<TextureSamplerManager>();
+        AddLayer<TextureManager>();
+        AddLayer<SceneManager>();
+        AddLayer<Renderer2D>();
     }
 
     return SDL_APP_CONTINUE;
@@ -86,7 +121,15 @@ SDL_AppResult Engine::App::Iterate() {
 }
 
 void Engine::App::Quit(SDL_AppResult result) {
-    // Handle resource cleanup here
+    // Manually cleanup registered systems
+    GetLayer<SceneManager>().Cleanup();
+    GetLayer<GraphicsPipelineManager>().Cleanup();
+    GetLayer<TextureSamplerManager>().Cleanup();
+    GetLayer<TextureManager>().Cleanup();
+
+    if (!m_gpuDevice && !m_window) SDL_ReleaseWindowFromGPUDevice(m_gpuDevice.get(), m_window.get());
+
+    GetLayer<AppContext>().gpuDevice = nullptr;
 }
 
 Engine::App &Engine::App::Get() {

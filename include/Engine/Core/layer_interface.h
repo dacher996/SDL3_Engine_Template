@@ -1,5 +1,5 @@
-#ifndef ENGINE_LAYER_H
-#define ENGINE_LAYER_H
+#ifndef ENGINE_LAYER_INTERFACE_H
+#define ENGINE_LAYER_INTERFACE_H
 
 namespace Engine {
     /// Archetype representing a layer
@@ -7,4 +7,4 @@ namespace Engine {
     };
 }
 
-#endif //ENGINE_LAYER_H
+#endif //ENGINE_LAYER_INTERFACE_H

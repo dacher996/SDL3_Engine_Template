@@ -27,10 +27,14 @@ namespace Engine {
         template<typename T>
         static T &AddLayer(const T &layer) { return Get().m_registry.ctx().emplace<T>(layer); }
 
+        template<typename T, typename... Args>
+        static T &AddLayer(Args &&... args) { return Get().m_registry.ctx().emplace<T>(std::forward<Args>(args)...); }
+
     private:
         float m_lastFrameTime;
         entt::registry m_registry;
         std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> m_window;
+        std::unique_ptr<SDL_GPUDevice, decltype(&SDL_DestroyGPUDevice)> m_gpuDevice;
 
         static App &Get();
     };

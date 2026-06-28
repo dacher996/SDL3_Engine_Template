@@ -2,12 +2,20 @@
 
 #include <SDL3/SDL_main.h>
 
+#include "App/Scenes/initial_scene.h"
 #include "Engine/Core/app.h"
+#include "Engine/Layers/scene_manager.h"
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     auto app = new Engine::App(argc, argv);
     *appstate = app;
-    return app->Init();
+    auto initStatus = app->Init();
+
+    if (initStatus == SDL_APP_CONTINUE) {
+        Engine::App::GetLayer<Engine::SceneManager>().PushScene(new YourProject::InitialScene());
+    }
+
+    return initStatus;
 }
 
 SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
