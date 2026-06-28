@@ -10,12 +10,14 @@ namespace YourProject {
 
         void Render() override;
 
-        void OnInput(Engine::AppEvent event) override;
+        void OnEvent(Engine::AppEvent event) override;
 
         void OnDestroy() override;
 
     private:
-        void LoadShaders();
+        bool LoadShaders();
+
+        bool LoadAtlases();
 
         bool m_ranOnce{false};
     };

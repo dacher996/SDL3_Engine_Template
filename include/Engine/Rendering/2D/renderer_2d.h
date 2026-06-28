@@ -47,8 +47,8 @@ namespace Engine {
         /// 3. Execute all content passes in order (each iterates over all views)
         /// 4. Blit the last pass's render target to the swapchain (present)
         /// 5. Submit command buffer
-        void Render();
-        
+        void Present();
+
         /// Set a custom ordered list of content render passes. Replaces the default
         /// pipeline. Pass ownership is NOT transferred (caller manages lifetime).
         /// The last pass's render target will be used as the source for the final

@@ -37,7 +37,7 @@ namespace Engine {
     m_currentFrameData = PrepareFrame(submissions);
   }
 
-  void Renderer2D::Render() {
+  void Renderer2D::Present() {
     // Don't render anything if the setup is incomplete
     if (!m_spriteDataBuffer.Valid() || !m_entityIndexBuffer.Valid())
       return;
@@ -115,8 +115,9 @@ namespace Engine {
   FrameRenderData
   Renderer2D::PrepareFrame(const std::vector<SpriteSubmission> &submissions) {
     struct RenderCommand {
-      Uint32 sortIndex;
+      Uint64 sortIndex;
       Uint16 shaderId;
+      Uint16 textureId;
       Uint16 entityIndex; // index into this view's unique sprite data (before global offset)
     };
 
@@ -164,10 +165,13 @@ namespace Engine {
       // Build render commands with sort keys
       prep.renderQueue.reserve(entries.size());
       for (size_t i = 0; i < entries.size(); ++i) {
-        auto depth = static_cast<Uint32>(entries[i].depth) << 16;
+        Uint64 depth = static_cast<Uint64>(entries[i].depth) << 32;
+        Uint64 shader = static_cast<Uint64>(entries[i].shaderId) << 16;
+        Uint64 texture = static_cast<Uint64>(entries[i].textureId);
         prep.renderQueue.push_back({
-          .sortIndex = depth | (entries[i].shaderId & 0xFFFF),
+          .sortIndex = depth | shader | texture,
           .shaderId = entries[i].shaderId,
+          .textureId = entries[i].textureId,
           .entityIndex = dataIndices[i],
         });
       }
@@ -184,10 +188,14 @@ namespace Engine {
       prep.stateData.entityIndexes.reserve(prep.renderQueue.size());
 
       {
-        Uint32 lastSortIndex = 0;
+        Uint64 lastSortIndex = 0;
+        Uint16 lastShaderId = 0;
+        Uint16 lastTextureId = 0;
         int currentCount = 0;
         if (!prep.renderQueue.empty()) {
           lastSortIndex = prep.renderQueue[0].sortIndex;
+          lastShaderId = prep.renderQueue[0].shaderId;
+          lastTextureId = prep.renderQueue[0].textureId;
         }
 
         for (const auto &command: prep.renderQueue) {
@@ -196,14 +204,16 @@ namespace Engine {
             currentSortIndex == lastSortIndex) {
             currentCount++;
           } else {
-            prep.stateData.data.emplace_back(currentCount, lastSortIndex, 0);
+            prep.stateData.data.emplace_back(currentCount, lastShaderId, lastTextureId);
             currentCount = 1;
             lastSortIndex = currentSortIndex;
+            lastShaderId = command.shaderId;
+            lastTextureId = command.textureId;
           }
         }
 
         if (currentCount > 0) {
-          prep.stateData.data.emplace_back(currentCount, lastSortIndex, 0);
+          prep.stateData.data.emplace_back(currentCount, lastShaderId, lastTextureId);
         }
       }
 

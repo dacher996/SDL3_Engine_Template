@@ -8,6 +8,7 @@
 #include "Engine/Layers/graphics_pipeline_manager.h"
 #include "Engine/Layers/scene_manager.h"
 #include "Engine/Layers/texture_manager.h"
+#include "Engine/Layers/texture_region_manager.h"
 #include "Engine/Layers/texture_sampler_manager.h"
 #include "Engine/Rendering/2D/renderer_2d.h"
 
@@ -64,6 +65,7 @@ SDL_AppResult Engine::App::Init() {
         AddLayer<GraphicsPipelineManager>();
         AddLayer<TextureSamplerManager>();
         AddLayer<TextureManager>();
+        AddLayer<TextureRegionManager>();
         AddLayer<SceneManager>();
         AddLayer<Renderer2D>();
     }
@@ -83,7 +85,7 @@ SDL_AppResult Engine::App::Event(SDL_Event *event) {
             auto &appContext = GetLayer<AppContext>();
             appContext.windowWidth = event->window.data1;
             appContext.windowHeight = event->window.data2;
-            GetLayer<SceneManager>().OnInput(
+            GetLayer<SceneManager>().OnEvent(
                 static_cast<AppEvent>(WindowResizedEvent(event->window.data1, event->window.data2))
             );
             return SDL_APP_CONTINUE;
@@ -100,7 +102,7 @@ SDL_AppResult Engine::App::Event(SDL_Event *event) {
             break;
     }
 
-    GetLayer<SceneManager>().OnInput(static_cast<AppEvent>(SDLEvent(event)));
+    GetLayer<SceneManager>().OnEvent(static_cast<AppEvent>(SDLEvent(event)));
 
     return SDL_APP_CONTINUE;
 }

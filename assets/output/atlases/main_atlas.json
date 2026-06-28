@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "name": "main_atlas",
+    "w": 4096,
+    "h": 4096,
+    "border_padding": 1,
+    "spacing": 1
+  },
+  "regions": [
+    {
+      "id": 0,
+      "name": "PIXEL",
+      "layer": 0,
+      "rect": [
+        1,
+        1,
+        1,
+        1
+      ]
+    }
+  ]
+}

@@ -34,8 +34,8 @@ namespace Engine {
         /// Processes the current scene.
         void OnRender();
 
-        /// Forwards user input
-        void OnInput(AppEvent event) const;
+        /// Forwards user events and input
+        void OnEvent(AppEvent event) const;
 
         /// Clears any managed resources
         void Cleanup();

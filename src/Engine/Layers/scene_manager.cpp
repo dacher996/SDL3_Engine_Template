@@ -28,10 +28,10 @@ void Engine::SceneManager::OnRender() {
     CurrentScene().Render();
 }
 
-void Engine::SceneManager::OnInput(AppEvent event) const {
+void Engine::SceneManager::OnEvent(AppEvent event) const {
     if (sceneStack.empty()) return;
 
-    CurrentScene().OnInput(event);
+    CurrentScene().OnEvent(event);
 }
 
 void Engine::SceneManager::Cleanup() {

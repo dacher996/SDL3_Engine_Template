@@ -1,3 +1,3 @@
 # Engine
 
-A game engine using SDL3 
+An SDL3 engine template implementing GPU API 

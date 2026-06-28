@@ -19,8 +19,8 @@ namespace Engine {
         /// Called once per frame to render the scene.
         virtual void Render() = 0;
 
-        /// Called when there is a new input available
-        virtual void OnInput(AppEvent event) = 0;
+        /// Called when there is a new event available
+        virtual void OnEvent(AppEvent event) = 0;
 
         /// Called just before the scene is destroyed. At this point the scene is not part of the scene stack anymore.
         virtual void OnDestroy() = 0;

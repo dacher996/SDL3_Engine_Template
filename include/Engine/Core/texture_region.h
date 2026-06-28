@@ -7,7 +7,7 @@ namespace Engine {
     /// Texture region
     struct TextureRegion {
         /// The id of the texture registered inside TextureManager
-        Uint8 textureId;
+        Uint16 textureId;
 
         /// The layer id within which the texture region is located
         Uint8 layerId;

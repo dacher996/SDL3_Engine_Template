@@ -17,10 +17,13 @@ file(GLOB_RECURSE ENGINE_SOURCES
 
 set(SOURCES src/main.cpp
         ${ENGINE_SOURCES}
+        include/App/Core/components.h
         include/App/Scenes/initial_scene.h
         src/App/Scenes/initial_scene.cpp
         include/App/Scenes/scene_2d.h
         src/App/Scenes/scene_2d.cpp
+        include/App/Core/Parsers/inhouse_spritesheet_parser.h
+        src/App/Core/Parsers/inhouse_spritesheet_parser.cpp
 )
 
 # CPM
@@ -57,6 +60,10 @@ list(APPEND LIBS SDL3_image::SDL3_image)
 # GLM
 CPMAddPackage("gh:g-truc/glm#6f14f47")
 list(APPEND LIBS glm::glm)
+
+# nlohmann/json
+CPMAddPackage("gh:nlohmann/json@3.11.3")
+list(APPEND LIBS nlohmann_json::nlohmann_json)
 
 ########################################################################
 

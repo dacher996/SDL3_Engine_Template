@@ -6,6 +6,7 @@
 #include "Engine/Core/texture_sampler_type.h"
 #include "SDL3/SDL_gpu.h"
 #include "SDL3_image/SDL_image.h"
+#include "Engine/Layers/texture_region_manager.h"
 
 namespace Engine {
   bool TextureManager::RegisterTexture(Uint16 id, Texture *texture) {
@@ -29,6 +30,7 @@ namespace Engine {
   void TextureManager::UnloadTexture(Uint16 id) {
     if (!m_textures.contains(id))
       return;
+    App::GetLayer<TextureRegionManager>().ClearRegionsForTexture(id);
     m_textures[id]->Free(App::GetLayer<AppContext>().gpuDevice);
     m_textures.erase(id);
   }

@@ -20,6 +20,9 @@ namespace Engine {
 
         /// Pipeline/shader id to use for rendering (0 = default)
         Uint16 shaderId{0};
+
+        /// The texture id to use for rendering
+        Uint16 textureId{0};
     };
 
     /// Batch of sprites submitted by a scene (or any data source) for one frame.

@@ -6,8 +6,8 @@ rm -rf output
 mkdir output
 
 # Pack sprite atlases
-#./sprites/pack_atlases.sh
-#cp -r ./sprites/output/. ./output/
+./sprites/pack_atlases.sh
+cp -r ./sprites/output/. ./output/atlases/
 
 # Compile shaders
 ./shaders/compile.sh
