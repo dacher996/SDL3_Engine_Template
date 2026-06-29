@@ -34,4 +34,12 @@ namespace Engine {
         }
     }
 
+    void TextureRegionManager::SetPixelRegion(Uint32 regionId) {
+        m_pixelRegionId = regionId;
+    }
+
+    const TextureRegion* TextureRegionManager::GetPixelRegion() const {
+        return GetRegion(m_pixelRegionId);
+    }
+
 }

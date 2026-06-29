@@ -11,20 +11,27 @@ namespace Engine {
     class TextureRegionManager {
     public:
         /// Manually add a region
-        void AddRegion(Uint32 key, const TextureRegion& region);
+        void AddRegion(Uint32 key, const TextureRegion &region);
         
         /// Retrieve a region by key (returns const pointer to avoid copying, nullptr if not found)
-        const TextureRegion* GetRegion(Uint32 key) const;
+        const TextureRegion *GetRegion(Uint32 key) const;
 
         /// Import regions using a parser, associating them with a textureId
-        void ImportTextureRegions(Uint16 textureId, TextureRegionParser& parser);
+        void ImportTextureRegions(Uint16 textureId, TextureRegionParser &parser);
 
         /// Clears all regions associated with a specific texture ID
         void ClearRegionsForTexture(Uint16 textureId);
 
+        /// Sets the region ID to be used as a solid white pixel for primitive rendering
+        void SetPixelRegion(Uint32 regionId);
+
+        /// Gets the region used for solid white pixel rendering
+        const TextureRegion *GetPixelRegion() const;
+
     private:
         std::unordered_map<Uint32, TextureRegion> m_regions;
-        std::unordered_map<Uint16, std::vector<Uint32>> m_textureToRegionKeys;
+        std::unordered_map<Uint16, std::vector<Uint32> > m_textureToRegionKeys;
+        Uint32 m_pixelRegionId{0};
     };
 }
 

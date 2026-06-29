@@ -6,6 +6,7 @@
 #include "Engine/Core/logger.h"
 #include "Engine/Layers/texture_region_manager.h"
 #include "Engine/Rendering/2D/renderer_2d.h"
+#include "Engine/Rendering/2D/shape_2d_batch.h"
 #include <format>
 
 namespace YourProject {
@@ -22,7 +23,17 @@ namespace YourProject {
 
   void Scene2D::Render() {
     auto &renderer = Engine::App::GetLayer<Engine::Renderer2D>();
+
+    // Submit regular sprites
     renderer.Submit(PrepareSprites());
+
+    // // Submit debug primitives
+    // Engine::Shape2DBatch shapeBatch(m_camera.GetViewMatrix());
+    // shapeBatch.DrawRectOutlined(10.0f, 10.0f, 100.0f, 100.0f, Engine::Color{255, 0, 0, 255}, 2.0f);
+    // shapeBatch.DrawLine(0.0f, 0.0f, 200.0f, 200.0f, Engine::Color{0, 255, 0, 255}, 3.0f);
+    // shapeBatch.DrawRect(300.0f, 300.0f, 50.0f, 50.0f, Engine::Color{0, 0, 255, 128}, 0.5f); // Rotating rect
+    // renderer.Submit(shapeBatch);
+
     renderer.Present();
   }
 

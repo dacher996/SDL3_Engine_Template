@@ -3,6 +3,7 @@
 #include "Engine/Core/app.h"
 #include "Engine/Core/app_context.h"
 #include "Engine/Rendering/render_target_render_pass.h"
+#include "Engine/Rendering/2D/shape_2d_batch.h"
 
 namespace Engine {
   static constexpr Uint32 STORAGE_BUFFER_DEFAULT_SIZE = 1000;
@@ -30,11 +31,15 @@ namespace Engine {
   }
 
   void Renderer2D::Submit(const SpriteSubmission &submission) {
-    Submit(std::vector{submission});
+    m_pendingSubmissions.push_back(submission);
   }
 
   void Renderer2D::Submit(const std::vector<SpriteSubmission> &submissions) {
-    m_currentFrameData = PrepareFrame(submissions);
+    m_pendingSubmissions.insert(m_pendingSubmissions.end(), submissions.begin(), submissions.end());
+  }
+
+  void Renderer2D::Submit(Shape2DBatch &shapeBatch) {
+    Submit(shapeBatch.End());
   }
 
   void Renderer2D::Present() {
@@ -62,6 +67,10 @@ namespace Engine {
 
     // If the swapchain texture is valid, upload data and execute passes
     if (swapchainTexture) {
+      // Prepare the frame data from all pending submissions
+      m_currentFrameData = PrepareFrame(m_pendingSubmissions);
+      m_pendingSubmissions.clear();
+
       // Upload transfer buffers to GPU
       UploadBuffers(commandBuffer);
 

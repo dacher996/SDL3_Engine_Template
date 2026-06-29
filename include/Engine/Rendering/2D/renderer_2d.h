@@ -8,6 +8,8 @@
 #include "Engine/Rendering/storage_buffer.h"
 
 namespace Engine {
+    class Shape2DBatch; // Forward declaration
+
     /// 2D sprite renderer that owns the GPU buffers (single source of truth) and
 /// orchestrates the full rendering pipeline: sorting, buffer upload, render
 /// pass execution, and final presentation to the swapchain.
@@ -40,6 +42,10 @@ namespace Engine {
         /// and optional viewport/scissor. Sprite data from all submissions is merged
         /// into the shared GPU buffers with proper offsets.
         void Submit(const std::vector<SpriteSubmission> &submissions);
+
+        /// Convenience overload to directly submit a primitive shape batch.
+        /// Note: This consumes the batch's internal submission data.
+        void Submit(Shape2DBatch &shapeBatch);
 
         /// Execute the full rendering pipeline:
         /// 1. Acquire command buffer + swapchain texture
@@ -75,6 +81,9 @@ namespace Engine {
 
         /// Current frame's render data containing all views
         FrameRenderData m_currentFrameData;
+        
+        /// Pending submissions for the current frame
+        std::vector<SpriteSubmission> m_pendingSubmissions;
 
         /// Ordered list of content render passes to execute each frame
         std::vector<RenderPass *> m_renderPasses;

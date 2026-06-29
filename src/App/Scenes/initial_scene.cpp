@@ -24,6 +24,9 @@ namespace YourProject {
         if (!LoadShaders()) return;
         if (!LoadAtlases()) return;
 
+        // Set the id of the pixel region for primitive drawing
+        App::GetLayer<TextureRegionManager>().SetPixelRegion(0);
+
         // Go to next scene after everything has finished loading
         App::GetLayer<SceneManager>().ReplaceScene(new Scene2D());
     }

@@ -75,3 +75,7 @@ vcpkg_installed/
 # test output & cache
 Testing/
 .cache/
+
+# Assets output
+assets/**/output/
+!assets/output/
