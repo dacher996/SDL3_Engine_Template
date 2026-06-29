@@ -28,11 +28,11 @@ namespace YourProject {
     renderer.Submit(PrepareSprites());
 
     // Submit debug primitives
-    Engine::Shape2DBatch shapeBatch(m_camera.GetViewMatrix());
-    shapeBatch.DrawLine(96.0f, 96.f, 256.0f, 64.0f, Engine::Color{0, 255, 0, 255}, 3.0f);
-    shapeBatch.DrawRectOutlined(64.0f, 64.0f, 32.0f, 64.0f, Engine::Color{255, 0, 0, 255}, 2.0f);
-    shapeBatch.DrawRect(128.0f, 64.0f, 64.0f, 32.0f, Engine::Color{0, 0, 255, 128}, 0.5f);
-    renderer.Submit(shapeBatch);
+    // Engine::Shape2DBatch shapeBatch(m_camera.GetViewMatrix());
+    // shapeBatch.DrawLine(96.0f, 96.f, 256.0f, 64.0f, Engine::Color{0, 255, 0, 255}, 3.0f);
+    // shapeBatch.DrawRectOutlined(64.0f, 64.0f, 32.0f, 64.0f, Engine::Color{255, 0, 0, 255}, 2.0f);
+    // shapeBatch.DrawRect(128.0f, 64.0f, 64.0f, 32.0f, Engine::Color{0, 0, 255, 128}, 0.5f);
+    // renderer.Submit(shapeBatch);
 
     renderer.Present();
   }

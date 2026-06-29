@@ -26,9 +26,10 @@ namespace YourProject {
         /// Returns the active camera
         virtual Engine::Camera2D &GetCamera();
 
-        /// Returns all visible entities
+        /// Returns all visible entities (without any offscreen padding)
         std::vector<Engine::Entity> GetVisibleEntities();
 
+        /// Returns visible entities that are within the active view + additional offscreen padding
         virtual std::vector<Engine::Entity> GetVisibleEntities(Engine::Rectf padding);
 
         /// Build a SpriteSubmission from the current entity state. Use the main camera for object culling
