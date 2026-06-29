@@ -51,7 +51,7 @@ namespace Engine {
     Uint16 CreateMaterial(Uint16 shaderId, Uint16 textureId);
 
     /// Creates a material from a graphics pipeline and a texture region
-    Uint16 CreateMaterialFromRegion(Uint16 shaderId, Uint16 textureRegionId);
+    Uint16 CreateMaterialFromRegion(Uint16 shaderId, Uint32 textureRegionId);
 
     /// Retrieves a material via an id
     Material *GetMaterial(Uint16 id);

@@ -14,7 +14,7 @@ namespace Engine {
         return newId;
     }
 
-    Uint16 MaterialManager::CreateMaterialFromRegion(Uint16 shaderId, Uint16 textureRegionId) {
+    Uint16 MaterialManager::CreateMaterialFromRegion(Uint16 shaderId, Uint32 textureRegionId) {
         auto region = App::GetLayer<TextureRegionManager>().GetRegion(textureRegionId);
         return CreateMaterial(shaderId, region->textureId);
     }
