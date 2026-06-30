@@ -15,11 +15,16 @@ namespace YourProject {
         void OnDestroy() override;
 
     private:
+        void SetDefaults();
+
         bool LoadShaders();
 
         bool LoadAtlases();
 
         bool m_ranOnce{false};
+        Uint16 m_defaultTextureId{0};
+        Uint16 m_defaultGraphicsPipeline{0};
+        Uint16 m_defaultPixelRegion{0};
     };
 }
 

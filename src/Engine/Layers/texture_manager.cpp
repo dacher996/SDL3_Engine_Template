@@ -44,6 +44,14 @@ namespace Engine {
     m_textures.clear();
   }
 
+  void TextureManager::SetDefaultTexture(Uint16 id) {
+    m_defaultTextureId = id;
+  }
+
+  Texture *TextureManager::GetDefaultTexture() {
+    return GetTexture(m_defaultTextureId);
+  }
+
   SDL_Surface *TextureManager::ImageToSurface(const char *imageFilename,
                                               int desiredChannels) {
     const std::string fullPath = std::format(

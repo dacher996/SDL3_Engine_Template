@@ -18,11 +18,8 @@ namespace Engine {
         /// Render layer depth — higher values appear in front
         Uint16 depth{0};
 
-        /// Pipeline/shader id to use for rendering (0 = default)
-        Uint16 shaderId{0};
-
-        /// The texture id to use for rendering
-        Uint16 textureId{0};
+        /// Material id to use for rendering
+        Uint16 materialId;
     };
 
     /// Batch of sprites submitted by a scene (or any data source) for one frame.

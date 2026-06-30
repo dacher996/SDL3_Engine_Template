@@ -2,8 +2,9 @@
 
 #include "Engine/Core/app.h"
 #include "Engine/Core/app_context.h"
-#include "Engine/Rendering/render_target_render_pass.h"
+#include "Engine/Layers/material_manager.h"
 #include "Engine/Rendering/2D/shape_2d_batch.h"
+#include "Engine/Rendering/render_target_render_pass.h"
 
 namespace Engine {
   static constexpr Uint32 STORAGE_BUFFER_DEFAULT_SIZE = 1000;
@@ -35,12 +36,11 @@ namespace Engine {
   }
 
   void Renderer2D::Submit(const std::vector<SpriteSubmission> &submissions) {
-    m_pendingSubmissions.insert(m_pendingSubmissions.end(), submissions.begin(), submissions.end());
+    m_pendingSubmissions.insert(m_pendingSubmissions.end(), submissions.begin(),
+                                submissions.end());
   }
 
-  void Renderer2D::Submit(Shape2DBatch &shapeBatch) {
-    Submit(shapeBatch.End());
-  }
+  void Renderer2D::Submit(Shape2DBatch &shapeBatch) { Submit(shapeBatch.End()); }
 
   void Renderer2D::Present() {
     // Don't render anything if the setup is incomplete
@@ -73,6 +73,8 @@ namespace Engine {
 
       // Upload transfer buffers to GPU
       UploadBuffers(commandBuffer);
+      // Submit entity material uniform data
+      SubmitMaterialUniforms(commandBuffer);
 
       // Prepare and execute all content render passes
       for (auto *pass: m_renderPasses) {
@@ -125,15 +127,16 @@ namespace Engine {
   Renderer2D::PrepareFrame(const std::vector<SpriteSubmission> &submissions) {
     struct RenderCommand {
       Uint64 sortIndex;
-      Uint16 shaderId;
-      Uint16 textureId;
-      Uint16 entityIndex; // index into this view's unique sprite data (before global offset)
+      Uint16 materialId;
+      Uint16 entityIndex; // index into this view's unique sprite data (before
+      // global offset)
     };
 
     // Per-view intermediate data computed in the first pass
     struct ViewPrepData {
       std::vector<RenderCommand> renderQueue;
-      std::vector<size_t> uniqueDataEntryIndices; // indices into the submission's entries[] for unique sprites
+      std::vector<size_t> uniqueDataEntryIndices; // indices into the submission's
+      // entries[] for unique sprites
       RenderPassStateData stateData;
     };
 
@@ -175,12 +178,10 @@ namespace Engine {
       prep.renderQueue.reserve(entries.size());
       for (size_t i = 0; i < entries.size(); ++i) {
         Uint64 depth = static_cast<Uint64>(entries[i].depth) << 32;
-        Uint64 shader = static_cast<Uint64>(entries[i].shaderId) << 16;
-        Uint64 texture = static_cast<Uint64>(entries[i].textureId);
+        Uint64 material = static_cast<Uint64>(entries[i].materialId);
         prep.renderQueue.push_back({
-          .sortIndex = depth | shader | texture,
-          .shaderId = entries[i].shaderId,
-          .textureId = entries[i].textureId,
+          .sortIndex = depth | material,
+          .materialId = entries[i].materialId,
           .entityIndex = dataIndices[i],
         });
       }
@@ -198,13 +199,11 @@ namespace Engine {
 
       {
         Uint64 lastSortIndex = 0;
-        Uint16 lastShaderId = 0;
-        Uint16 lastTextureId = 0;
+        Uint16 lastMaterialId = App::GetLayer<MaterialManager>().GetDefaultMaterial()->id;
         int currentCount = 0;
         if (!prep.renderQueue.empty()) {
           lastSortIndex = prep.renderQueue[0].sortIndex;
-          lastShaderId = prep.renderQueue[0].shaderId;
-          lastTextureId = prep.renderQueue[0].textureId;
+          lastMaterialId = prep.renderQueue[0].materialId;
         }
 
         for (const auto &command: prep.renderQueue) {
@@ -213,16 +212,15 @@ namespace Engine {
             currentSortIndex == lastSortIndex) {
             currentCount++;
           } else {
-            prep.stateData.data.emplace_back(currentCount, lastShaderId, lastTextureId);
+            prep.stateData.data.emplace_back(currentCount, lastMaterialId);
             currentCount = 1;
             lastSortIndex = currentSortIndex;
-            lastShaderId = command.shaderId;
-            lastTextureId = command.textureId;
+            lastMaterialId = command.materialId;
           }
         }
 
         if (currentCount > 0) {
-          prep.stateData.data.emplace_back(currentCount, lastShaderId, lastTextureId);
+          prep.stateData.data.emplace_back(currentCount, lastMaterialId);
         }
       }
 
@@ -308,7 +306,8 @@ namespace Engine {
       viewData.stateData = std::move(viewPreps[v].stateData);
       viewData.baseVertexIndex = cumulativeVertexIndex;
 
-      // Viewport: use submission's custom viewport, or default to full render target
+      // Viewport: use submission's custom viewport, or default to full render
+      // target
       if (submissions[v].viewport.w > 0 && submissions[v].viewport.h > 0) {
         viewData.viewport = submissions[v].viewport;
       } else {
@@ -322,7 +321,8 @@ namespace Engine {
         };
       }
 
-      // Scissor: use submission's custom scissor, or default to full render target
+      // Scissor: use submission's custom scissor, or default to full render
+      // target
       if (submissions[v].scissor.w > 0 && submissions[v].scissor.h > 0) {
         viewData.scissor = submissions[v].scissor;
       } else {
@@ -334,7 +334,8 @@ namespace Engine {
         };
       }
 
-      cumulativeVertexIndex += static_cast<int>(viewData.stateData.totalCount) * 6;
+      cumulativeVertexIndex +=
+          static_cast<int>(viewData.stateData.totalCount) * 6;
       frameData.views.push_back(std::move(viewData));
     }
 
@@ -380,4 +381,44 @@ namespace Engine {
 
     SDL_EndGPUCopyPass(copyPass);
   }
-}
+
+  void Renderer2D::SubmitMaterialUniforms(SDL_GPUCommandBuffer *commandBuffer) const {
+    auto &materialManager = App::GetLayer<MaterialManager>();
+    auto &materials = materialManager.GetMaterials();
+
+    bool anyDirty = false;
+    for (const auto &[id, material]: materials) {
+      if (material->needsUpload && material->uniformBuffer.Valid()) {
+        anyDirty = true;
+        break;
+      }
+    }
+
+    if (!anyDirty) return;
+
+    auto copyPass = SDL_BeginGPUCopyPass(commandBuffer);
+    if (!copyPass) {
+      ENGINE_LOG_SDL_ERROR("Unable to begin copy pass for material uniforms.");
+      return;
+    }
+
+    for (const auto &[id, material]: materials) {
+      if (material->needsUpload && material->uniformBuffer.Valid()) {
+        SDL_GPUTransferBufferLocation location{
+          .transfer_buffer = material->uniformBuffer.transferBuffer,
+          .offset = 0,
+        };
+        SDL_GPUBufferRegion region{
+          .buffer = material->uniformBuffer.buffer,
+          .offset = 0,
+          .size = material->uniformBuffer.size,
+        };
+
+        SDL_UploadToGPUBuffer(copyPass, &location, &region, false);
+        material->needsUpload = false;
+      }
+    }
+
+    SDL_EndGPUCopyPass(copyPass);
+  }
+} // namespace Engine

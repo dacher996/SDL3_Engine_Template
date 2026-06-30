@@ -26,6 +26,12 @@ namespace Engine {
         /// Frees all pipelines from memory
         void Cleanup();
 
+        /// Sets the default graphics pipeline
+        void SetDefaultPipeline(Uint16 id);
+
+        /// Retrieves the default graphics pipeline
+        SDL_GPUGraphicsPipeline *GetDefaultPipeline();
+
         /// Loads a shader from file and returns a pointer to it.
         static SDL_GPUShader *LoadShader(const std::string &shaderFilename,
                                          Uint32 samplerCount = 0,
@@ -42,6 +48,7 @@ namespace Engine {
 
     private:
         std::unordered_map<Uint16, SDL_GPUGraphicsPipeline *> m_pipelines;
+        Uint16 m_defaultPipelineId{0};
     };
 }
 

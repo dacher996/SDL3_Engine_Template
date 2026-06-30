@@ -9,6 +9,8 @@
 #include "Engine/Rendering/2D/shape_2d_batch.h"
 #include <format>
 
+#include "Engine/Layers/material_manager.h"
+
 namespace YourProject {
   Scene2D::Scene2D() : Scene2D(Engine::Camera2D()) {
   }
@@ -90,6 +92,7 @@ namespace YourProject {
       static_cast<size_t>(static_cast<float>(visible.size()) * 1.2f));
     submission.viewMatrix = camera.GetViewMatrix();
     auto &regionManager = Engine::App::GetLayer<Engine::TextureRegionManager>();
+    auto defaultMaterial = Engine::App::GetLayer<Engine::MaterialManager>().GetDefaultMaterial();
 
     for (auto entityId: visible) {
       const auto &pos = m_registry.get<Engine::Position>(entityId);
@@ -118,18 +121,17 @@ namespace YourProject {
       entry.data.tex_h = texRegion->h;
       entry.data.textureLayerId = static_cast<float>(texRegion->layerId);
       entry.depth = static_cast<Uint16>(pos.z);
-      entry.textureId = texRegion->textureId;
 
-      // Entities with shader components produce one entry per shader
-      if (const auto *shader = m_registry.try_get<Engine::Shader>(entityId);
-        shader && !shader->shaders.empty()) {
-        for (auto sid: shader->shaders) {
-          entry.shaderId = sid.shaderId;
+      // Entities with material components produce one entry per material
+      if (const auto *materialComp = m_registry.try_get<Engine::MaterialComponent>(entityId);
+        materialComp && !materialComp->materialIds.empty()) {
+        for (auto mid: materialComp->materialIds) {
+          entry.materialId = mid;
           submission.entries.push_back(entry);
         }
       } else {
-        // If no shader component attached, use the default shader
-        entry.shaderId = 0;
+        // If no material component attached, use the default material
+        entry.materialId = defaultMaterial->id;
         submission.entries.push_back(entry);
       }
     }

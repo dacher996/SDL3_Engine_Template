@@ -4,6 +4,8 @@
 #include "Engine/Layers/texture_region_manager.h"
 #include <cmath>
 
+#include "Engine/Layers/material_manager.h"
+
 namespace Engine {
   Shape2DBatch::Shape2DBatch(const glm::mat4 &viewMatrix) {
     m_submission.viewMatrix = viewMatrix;
@@ -48,8 +50,7 @@ namespace Engine {
     entry.data.textureLayerId = static_cast<float>(pixelRegion->layerId);
 
     entry.depth = depth;
-    entry.shaderId = 0;
-    entry.textureId = pixelRegion->textureId;
+    entry.materialId = App::GetLayer<MaterialManager>().GetDefaultMaterial()->id;
 
     m_submission.entries.push_back(entry);
   }
@@ -116,8 +117,7 @@ namespace Engine {
     entry.data.textureLayerId = static_cast<float>(region->layerId);
 
     entry.depth = depth;
-    entry.shaderId = 0;
-    entry.textureId = region->textureId;
+    entry.materialId = App::GetLayer<MaterialManager>().GetDefaultMaterial()->id;;
 
     m_submission.entries.push_back(entry);
   }

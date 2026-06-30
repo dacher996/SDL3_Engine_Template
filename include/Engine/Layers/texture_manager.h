@@ -26,6 +26,12 @@ namespace Engine {
         /// Frees all pipelines from memory
         void Cleanup();
 
+        /// Sets the default texture
+        void SetDefaultTexture(Uint16 id);
+
+        /// Retrieves the default texture
+        Texture *GetDefaultTexture();
+
         /// Loads an image file into a surface.
         ///
         /// The surface needs to be freed manually once not in use.
@@ -49,6 +55,7 @@ namespace Engine {
 
     private:
         std::unordered_map<Uint16, Texture *> m_textures;
+        Uint16 m_defaultTextureId{0};
     };
 }
 

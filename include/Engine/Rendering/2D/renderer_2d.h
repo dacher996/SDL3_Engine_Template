@@ -103,6 +103,9 @@ namespace Engine {
         /// Uploads both transfer buffers (sprite data + indices) to GPU via a copy
         /// pass.
         void UploadBuffers(SDL_GPUCommandBuffer *commandBuffer) const;
+
+        /// Uploads dirty material uniform buffers to GPU via a copy pass.
+        void SubmitMaterialUniforms(SDL_GPUCommandBuffer *commandBuffer) const;
     };
 }
 

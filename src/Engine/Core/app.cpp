@@ -6,6 +6,7 @@
 
 #include "Engine/Core/defines.h"
 #include "Engine/Layers/graphics_pipeline_manager.h"
+#include "Engine/Layers/material_manager.h"
 #include "Engine/Layers/scene_manager.h"
 #include "Engine/Layers/texture_manager.h"
 #include "Engine/Layers/texture_region_manager.h"
@@ -66,6 +67,7 @@ SDL_AppResult Engine::App::Init() {
         AddLayer<TextureSamplerManager>();
         AddLayer<TextureManager>();
         AddLayer<TextureRegionManager>();
+        AddLayer<MaterialManager>();
         AddLayer<SceneManager>();
         AddLayer<Renderer2D>();
     }
@@ -125,6 +127,7 @@ SDL_AppResult Engine::App::Iterate() {
 void Engine::App::Quit(SDL_AppResult result) {
     // Manually cleanup registered systems
     GetLayer<SceneManager>().Cleanup();
+    GetLayer<MaterialManager>().Cleanup();
     GetLayer<GraphicsPipelineManager>().Cleanup();
     GetLayer<TextureSamplerManager>().Cleanup();
     GetLayer<TextureManager>().Cleanup();

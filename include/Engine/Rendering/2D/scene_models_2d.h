@@ -14,11 +14,8 @@ namespace Engine {
         /// Number of entities that share this state
         size_t itemCount{0};
 
-        /// The pipeline id
-        Uint16 shaderId{0};
-
-        /// The texture id used to work with the pipeline
-        Uint16 textureId{0};
+        /// The material id used to work with the pipeline
+        Uint16 materialId{0};
     };
 
     /// Render pass state data used to efficiently manage pipeline changes and optimize binding calls

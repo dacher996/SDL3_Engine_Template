@@ -5,7 +5,7 @@
 #include "Engine/Layers/graphics_pipeline_manager.h"
 #include "Engine/Layers/texture_manager.h"
 #include "Engine/Layers/texture_sampler_manager.h"
-#include "glm/matrix.hpp"
+#include "Engine/Layers/material_manager.h"
 
 namespace Engine {
   Default2DRenderPass::Default2DRenderPass(StorageBuffer &spriteData,
@@ -56,17 +56,23 @@ namespace Engine {
       // Draw this view's pipeline state groups
       int startIndex = view.baseVertexIndex;
       for (const auto &pipelineData: view.stateData.data) {
-        auto pipeline = Engine::App::GetLayer<GraphicsPipelineManager>().GetPipeline(pipelineData.shaderId);
+        auto *material = App::GetLayer<MaterialManager>().GetMaterial(pipelineData.materialId);
+        if (!material) {
+          ENGINE_LOG_ERROR(std::format("Unable to get material with id {}", pipelineData.materialId));
+          return false;
+        }
+
+        auto pipeline = App::GetLayer<GraphicsPipelineManager>().GetPipeline(material->shaderId);
         if (!pipeline) {
-          ENGINE_LOG_ERROR(std::format("Unable to get pipeline with id {}", pipelineData.shaderId));
+          ENGINE_LOG_ERROR(std::format("Unable to get pipeline with id {}", material->shaderId));
           return false;
         }
         SDL_BindGPUGraphicsPipeline(renderPass, pipeline);
 
         /// Texture bindings are costly, so do it only when needed
-        if (boundTextureId != pipelineData.textureId) {
-          boundTextureId = pipelineData.textureId;
-          const auto textureData = Engine::App::GetLayer<TextureManager>().GetTexture(
+        if (boundTextureId != material->textureId) {
+          boundTextureId = material->textureId;
+          const auto textureData = App::GetLayer<TextureManager>().GetTexture(
             static_cast<Uint16>(boundTextureId));
           if (!textureData) {
             ENGINE_LOG_SDL_ERROR("Invalid texture data. Make sure the texture is properly registered before using it.");
@@ -75,10 +81,16 @@ namespace Engine {
           std::array textureSamplerBindings{
             SDL_GPUTextureSamplerBinding{
               .texture = textureData->texture,
-              .sampler = Engine::App::GetLayer<TextureSamplerManager>().GetSampler(LINEAR_CLAMP),
+              .sampler = App::GetLayer<TextureSamplerManager>().GetSampler(LINEAR_CLAMP),
             },
           };
           SDL_BindGPUFragmentSamplers(renderPass, 0, textureSamplerBindings.data(), textureSamplerBindings.size());
+        }
+
+        if (material->uniformBuffer.Valid()) {
+          std::array fragmentStorageBuffers{material->uniformBuffer.buffer};
+          SDL_BindGPUFragmentStorageBuffers(renderPass, 0, fragmentStorageBuffers.data(),
+                                            fragmentStorageBuffers.size());
         }
 
         // View matrix from this view's render pass state data

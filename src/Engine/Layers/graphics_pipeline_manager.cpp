@@ -16,6 +16,14 @@ namespace Engine {
     m_pipelines.clear();
   }
 
+  void GraphicsPipelineManager::SetDefaultPipeline(Uint16 id) {
+    m_defaultPipelineId = id;
+  }
+
+  SDL_GPUGraphicsPipeline *GraphicsPipelineManager::GetDefaultPipeline() {
+    return GetPipeline(m_defaultPipelineId);
+  }
+
   SDL_GPUShader *GraphicsPipelineManager::LoadShader(const std::string &shaderFilename, Uint32 samplerCount,
                                                      Uint32 uniformBufferCount, Uint32 storageBufferCount,
                                                      Uint32 storageTextureCount) {
