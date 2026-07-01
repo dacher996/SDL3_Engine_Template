@@ -6,6 +6,7 @@
 
 #include "Engine/Core/defines.h"
 #include "Engine/Layers/graphics_pipeline_manager.h"
+#include "Engine/Layers/imgui_manager.h"
 #include "Engine/Layers/material_manager.h"
 #include "Engine/Layers/scene_manager.h"
 #include "Engine/Layers/texture_manager.h"
@@ -37,7 +38,8 @@ SDL_AppResult Engine::App::Init() {
     auto &appContext = GetLayer<AppContext>();
 
     m_gpuDevice.reset(SDL_CreateGPUDevice(
-        SDL_GPU_SHADERFORMAT_MSL | SDL_GPU_SHADERFORMAT_DXIL | SDL_GPU_SHADERFORMAT_SPIRV, true, nullptr));
+        SDL_GPU_SHADERFORMAT_METALLIB | SDL_GPU_SHADERFORMAT_MSL | SDL_GPU_SHADERFORMAT_DXIL |
+        SDL_GPU_SHADERFORMAT_SPIRV, true, nullptr));
     m_window.reset(SDL_CreateWindow(APP_NAME, appContext.windowWidth, appContext.windowHeight,
                                     SDL_WINDOW_RESIZABLE));
 
@@ -70,19 +72,28 @@ SDL_AppResult Engine::App::Init() {
         AddLayer<MaterialManager>();
         AddLayer<SceneManager>();
         AddLayer<Renderer2D>();
+        AddLayer<ImGuiManager>();
     }
 
     return SDL_APP_CONTINUE;
 }
 
 SDL_AppResult Engine::App::Event(SDL_Event *event) {
-    switch (event->type) {
-        case SDL_EVENT_QUIT:
+    if (event->type == SDL_EVENT_QUIT) {
+        return SDL_APP_SUCCESS;
+    }
+    if (event->type == SDL_EVENT_WINDOW_CLOSE_REQUESTED) {
+        if (SDL_GetWindowID(m_window.get()) == event->window.windowID) {
             return SDL_APP_SUCCESS;
-        case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
-            if (SDL_GetWindowID(m_window.get()) == event->window.windowID) {
-                return SDL_APP_SUCCESS;
-            }
+        }
+    }
+
+    // If the ImGUI wants to handle events, do not propagate them to the app
+    if (GetLayer<ImGuiManager>().HandleEvent(event)) {
+        return SDL_APP_CONTINUE;
+    }
+
+    switch (event->type) {
         case SDL_EVENT_WINDOW_RESIZED: {
             auto &appContext = GetLayer<AppContext>();
             appContext.windowWidth = event->window.data1;
@@ -110,16 +121,24 @@ SDL_AppResult Engine::App::Event(SDL_Event *event) {
 }
 
 SDL_AppResult Engine::App::Iterate() {
+    auto &ctx = GetLayer<AppContext>();
     // Calculate delta time
     {
         float newTime = SDL_GetTicks() / 1000.0f;
-        GetLayer<AppContext>().deltaTime = newTime - m_lastFrameTime;
+        ctx.deltaTime = newTime - m_lastFrameTime;
         m_lastFrameTime = newTime;
     }
-
     auto &sceneManager = GetLayer<SceneManager>();
-    sceneManager.OnUpdate(GetLayer<AppContext>().deltaTime);
+    auto &imguiManager = GetLayer<ImGuiManager>();
+
+    imguiManager.StartFrame();
+    sceneManager.OnUpdate(ctx.deltaTime);
+
     sceneManager.OnRender();
+
+    // There might be a case where the renderer doesn't call the ImGui render function
+    // So we call it again to finalize the drawings and enable the next frame.
+    imguiManager.Render();
 
     return SDL_APP_CONTINUE;
 }
@@ -131,6 +150,7 @@ void Engine::App::Quit(SDL_AppResult result) {
     GetLayer<GraphicsPipelineManager>().Cleanup();
     GetLayer<TextureSamplerManager>().Cleanup();
     GetLayer<TextureManager>().Cleanup();
+    GetLayer<ImGuiManager>().Cleanup();
 
     if (!m_gpuDevice && !m_window) SDL_ReleaseWindowFromGPUDevice(m_gpuDevice.get(), m_window.get());
 

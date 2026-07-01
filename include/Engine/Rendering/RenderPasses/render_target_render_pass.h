@@ -3,8 +3,8 @@
 
 #include <array>
 
-#include "logical_presentation.h"
-#include "render_pass.h"
+#include "../logical_presentation.h"
+#include "../render_pass.h"
 #include "SDL3/SDL_gpu.h"
 
 namespace Engine {

@@ -2,6 +2,7 @@
 #include "Engine/Core/app.h"
 #include "Engine/Core/app_context.h"
 #include "Engine/Layers/texture_region_manager.h"
+#include <ranges>
 
 namespace Engine {
     Uint16 MaterialManager::CreateMaterial(Uint16 shaderId, Uint16 textureId) {

@@ -189,6 +189,7 @@ namespace Engine {
     const Color Color::TEAL = Color{0, 128, 128, 255};
     const Color Color::THISTLE = Color{216, 191, 216, 255};
     const Color Color::TOMATO = Color{255, 99, 71, 255};
+    const Color Color::TRANSPARENT = Color{255, 255, 255, 0};
     const Color Color::TURQUOISE = Color{64, 224, 208, 255};
     const Color Color::VIOLET = Color{238, 130, 238, 255};
     const Color Color::WHEAT = Color{245, 222, 179, 255};

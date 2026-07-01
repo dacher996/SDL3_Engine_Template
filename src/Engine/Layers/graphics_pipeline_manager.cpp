@@ -50,7 +50,7 @@ namespace Engine {
       format = SDL_GPU_SHADERFORMAT_SPIRV;
       entrypoint = "main";
     } else if (backendFormats & SDL_GPU_SHADERFORMAT_MSL) {
-      fullPath = std::format("{}MSL/{}.MSL", shaderDir, shaderFilename);
+      fullPath = std::format("{}MSL/{}.msl", shaderDir, shaderFilename);
       format = SDL_GPU_SHADERFORMAT_MSL;
       entrypoint = "main0";
     } else if (backendFormats & SDL_GPU_SHADERFORMAT_DXIL) {

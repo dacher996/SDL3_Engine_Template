@@ -2,6 +2,7 @@
   "name": "your-project",
   "version-string": "0.0.1",
   "dependencies": [
+    "entt",
     "glm",
     "nlohmann-json",
     "sdl3",
@@ -12,6 +13,11 @@
       ]
     },
     "spdlog",
-    "entt"
+    {
+      "name": "imgui",
+      "features": [
+        "sdlgpu3-binding"
+      ]
+    }
   ]
 }

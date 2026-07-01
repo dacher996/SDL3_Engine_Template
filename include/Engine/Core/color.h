@@ -161,6 +161,7 @@ namespace Engine {
         static const Color TEAL;
         static const Color THISTLE;
         static const Color TOMATO;
+        static const Color TRANSPARENT;
         static const Color TURQUOISE;
         static const Color VIOLET;
         static const Color WHEAT;

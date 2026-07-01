@@ -56,8 +56,11 @@ list(APPEND LIBS glm::glm)
 find_package(nlohmann_json CONFIG REQUIRED)
 list(APPEND LIBS nlohmann_json::nlohmann_json)
 
-########################################################################
+# ImGui
+find_package(imgui CONFIG REQUIRED)
+list(APPEND LIBS imgui::imgui)
 
+########################################################################
 
 ## Executables
 
@@ -65,7 +68,6 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBS})
 target_include_directories(${PROJECT_NAME} PRIVATE include)
-
 
 target_compile_definitions(${PROJECT_NAME}
         PRIVATE

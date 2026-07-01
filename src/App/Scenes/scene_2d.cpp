@@ -4,12 +4,13 @@
 #include "Engine/Core/app.h"
 #include "Engine/Core/components.h"
 #include "Engine/Core/logger.h"
+#include "Engine/Layers/material_manager.h"
 #include "Engine/Layers/texture_region_manager.h"
 #include "Engine/Rendering/2D/renderer_2d.h"
 #include "Engine/Rendering/2D/shape_2d_batch.h"
 #include <format>
 
-#include "Engine/Layers/material_manager.h"
+#include "imgui.h"
 
 namespace YourProject {
   Scene2D::Scene2D() : Scene2D(Engine::Camera2D()) {

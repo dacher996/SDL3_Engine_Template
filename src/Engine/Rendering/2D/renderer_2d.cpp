@@ -2,9 +2,11 @@
 
 #include "Engine/Core/app.h"
 #include "Engine/Core/app_context.h"
+#include "Engine/Layers/imgui_manager.h"
 #include "Engine/Layers/material_manager.h"
 #include "Engine/Rendering/2D/shape_2d_batch.h"
-#include "Engine/Rendering/render_target_render_pass.h"
+#include "Engine/Rendering/RenderPasses/imgui_render_pass.h"
+#include "Engine/Rendering/RenderPasses/render_target_render_pass.h"
 
 namespace Engine {
   static constexpr Uint32 STORAGE_BUFFER_DEFAULT_SIZE = 1000;
@@ -49,6 +51,7 @@ namespace Engine {
     if (m_renderPasses.empty())
       return;
 
+    App::GetLayer<ImGuiManager>().Render();
     auto appContext = App::GetLayer<AppContext>();
 
     auto commandBuffer{SDL_AcquireGPUCommandBuffer(appContext.gpuDevice)};
@@ -87,6 +90,8 @@ namespace Engine {
       TextureToScreenRenderPass presentPass(swapchainTexture, lastRenderTarget,
                                             appContext.logicalPresentation);
       presentPass.Render(commandBuffer);
+      ImGUIRenderPass imguiRenderPass(swapchainTexture);
+      imguiRenderPass.Render(commandBuffer);
     }
 
     SDL_SubmitGPUCommandBuffer(commandBuffer);
@@ -199,7 +204,8 @@ namespace Engine {
 
       {
         Uint64 lastSortIndex = 0;
-        Uint16 lastMaterialId = App::GetLayer<MaterialManager>().GetDefaultMaterial()->id;
+        Uint16 lastMaterialId =
+            App::GetLayer<MaterialManager>().GetDefaultMaterial()->id;
         int currentCount = 0;
         if (!prep.renderQueue.empty()) {
           lastSortIndex = prep.renderQueue[0].sortIndex;
@@ -382,7 +388,8 @@ namespace Engine {
     SDL_EndGPUCopyPass(copyPass);
   }
 
-  void Renderer2D::SubmitMaterialUniforms(SDL_GPUCommandBuffer *commandBuffer) const {
+  void Renderer2D::SubmitMaterialUniforms(
+    SDL_GPUCommandBuffer *commandBuffer) const {
     auto &materialManager = App::GetLayer<MaterialManager>();
     auto &materials = materialManager.GetMaterials();
 
@@ -394,7 +401,8 @@ namespace Engine {
       }
     }
 
-    if (!anyDirty) return;
+    if (!anyDirty)
+      return;
 
     auto copyPass = SDL_BeginGPUCopyPass(commandBuffer);
     if (!copyPass) {
