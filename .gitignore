@@ -85,3 +85,10 @@ Testing/
 # Assets output
 assets/**/output/
 !assets/output/
+
+# JetBrains IDEs
+.idea/
+.idea/workspace.xml
+*.iws
+*.iml
+*.ipr

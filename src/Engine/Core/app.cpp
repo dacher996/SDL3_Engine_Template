@@ -14,6 +14,7 @@
 #include "Engine/Layers/texture_manager.h"
 #include "Engine/Layers/texture_region_manager.h"
 #include "Engine/Layers/texture_sampler_manager.h"
+#include "Engine/Layers/input_manager.h"
 #include "Engine/Rendering/2D/renderer_2d.h"
 
 static Engine::App *s_appHandle = nullptr;
@@ -72,6 +73,7 @@ SDL_AppResult Engine::App::Init() {
         AddLayer<TextureManager>();
         AddLayer<TextureRegionManager>();
         AddLayer<MaterialManager>();
+        AddLayer<InputManager>();
         AddLayer<SceneManager>();
         AddLayer<Renderer2D>();
 #if USE_IMGUI
@@ -98,6 +100,8 @@ SDL_AppResult Engine::App::Event(SDL_Event *event) {
         return SDL_APP_CONTINUE;
     }
 #endif
+
+    GetLayer<InputManager>().HandleEvent(event);
 
     switch (event->type) {
         case SDL_EVENT_WINDOW_RESIZED: {
@@ -139,6 +143,7 @@ SDL_AppResult Engine::App::Iterate() {
     auto &imguiManager = GetLayer<ImGuiManager>();
     imguiManager.StartFrame();
 #endif
+    GetLayer<InputManager>().OnUpdate(ctx.deltaTime);
     sceneManager.OnUpdate(ctx.deltaTime);
 
     sceneManager.OnRender();

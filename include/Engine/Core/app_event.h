@@ -33,6 +33,29 @@ namespace Engine {
 
         WindowMode mode;
     };
+
+    /// Input Events
+    struct ActionPressedEvent : AppEvent {
+        ActionPressedEvent(Uint32 action, int deviceIdx) : action(action), deviceIndex(deviceIdx) {}
+        Uint32 action;
+        int deviceIndex;
+    };
+
+    struct ActionReleasedEvent : AppEvent {
+        ActionReleasedEvent(Uint32 action, int deviceIdx) : action(action), deviceIndex(deviceIdx) {}
+        Uint32 action;
+        int deviceIndex;
+    };
+
+    struct GamepadConnectedEvent : AppEvent {
+        GamepadConnectedEvent(int deviceIdx) : deviceIndex(deviceIdx) {}
+        int deviceIndex;
+    };
+
+    struct GamepadDisconnectedEvent : AppEvent {
+        GamepadDisconnectedEvent(int deviceIdx) : deviceIndex(deviceIdx) {}
+        int deviceIndex;
+    };
 }
 
 #endif //ENGINE_APP_EVENT_H

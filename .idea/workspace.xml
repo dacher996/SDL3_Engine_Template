@@ -34,12 +34,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="991b0928-a294-4953-894d-7d91f96387fd" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/include/Engine/Core/gamepad_codes.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/Engine/Core/input.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/Engine/Core/input_types.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/Engine/Core/key_codes.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/Engine/Core/mouse_codes.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/Engine/Layers/input_manager.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Engine/Core/input.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Engine/Layers/input_manager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/Engine/Core/defines.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Engine/Core/defines.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/Engine/engine.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Engine/engine.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App/Scenes/scene_2d.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/App/Scenes/scene_2d.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/Engine/Core/app_event.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Engine/Core/app_event.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Engine/Core/app.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Engine/Core/app.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Engine/Rendering/2D/renderer_2d.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Engine/Rendering/2D/renderer_2d.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,7 +119,7 @@
     "cidr.known.project.marker": "true",
     "code.cleanup.on.save": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "feat/imgui",
+    "git-widget-placeholder": "feat/user-inputs",
     "last_opened_file_path": "/Users/algo/Repos/Engine",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -144,17 +150,25 @@
         <option name="CLION.EXTERNAL.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeBoostTestRunConfigurationType" factoryName="Boost Test" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2" />
+    <configuration default="true" type="CMakeBoostTestRunConfigurationType" factoryName="Boost Test" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" TEST_MODE="SUITE_TEST">
+      <method v="2">
+        <option name="BeforeTestRunTask" enabled="true" />
+      </method>
     </configuration>
-    <configuration default="true" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2" />
+    <configuration default="true" type="CMakeCatchTestRunConfigurationType" factoryName="Catch Test" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" TEST_MODE="SUITE_TEST">
+      <method v="2">
+        <option name="BeforeTestRunTask" enabled="true" />
+      </method>
     </configuration>
-    <configuration default="true" type="CMakeDoctestTestRunConfigurationType" factoryName="doctest Test" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2" />
+    <configuration default="true" type="CMakeDoctestTestRunConfigurationType" factoryName="doctest Test" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" TEST_MODE="SUITE_TEST">
+      <method v="2">
+        <option name="BeforeTestRunTask" enabled="true" />
+      </method>
     </configuration>
-    <configuration default="true" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2" />
+    <configuration default="true" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" TEST_MODE="SUITE_TEST">
+      <method v="2">
+        <option name="BeforeTestRunTask" enabled="true" />
+      </method>
     </configuration>
     <configuration name="YourProject" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="YourProject" TARGET_NAME="YourProject" CONFIG_NAME="macOS-debug" RUN_TARGET_PROJECT_NAME="YourProject" RUN_TARGET_NAME="YourProject">
       <method v="2">
