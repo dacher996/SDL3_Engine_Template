@@ -10,7 +10,9 @@
 #include "Engine/Rendering/2D/shape_2d_batch.h"
 #include <format>
 
+#if USE_IMGUI
 #include "imgui.h"
+#endif
 
 namespace YourProject {
   Scene2D::Scene2D() : Scene2D(Engine::Camera2D()) {
@@ -29,6 +31,10 @@ namespace YourProject {
 
     // Submit regular sprites
     renderer.Submit(PrepareSprites());
+
+#if USE_IMGUI
+    ImGui::ShowDemoWindow();
+#endif
 
     // Submit debug primitives
     // Engine::Shape2DBatch shapeBatch(m_camera.GetViewMatrix());

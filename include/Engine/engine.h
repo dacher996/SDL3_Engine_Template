@@ -18,6 +18,8 @@
 #include "Rendering/2D/renderer_2d.h"
 #include "Rendering/2D/shape_2d_batch.h"
 
+#if USE_IMGUI
 #include "imgui.h"
+#endif
 
 #endif // APP_ENGINE_ENGINE_H

@@ -2,10 +2,12 @@
 
 #include "Engine/Core/app.h"
 #include "Engine/Core/app_context.h"
+#if USE_IMGUI
 #include "Engine/Layers/imgui_manager.h"
+#include "Engine/Rendering/RenderPasses/imgui_render_pass.h"
+#endif
 #include "Engine/Layers/material_manager.h"
 #include "Engine/Rendering/2D/shape_2d_batch.h"
-#include "Engine/Rendering/RenderPasses/imgui_render_pass.h"
 #include "Engine/Rendering/RenderPasses/render_target_render_pass.h"
 
 namespace Engine {
@@ -51,7 +53,9 @@ namespace Engine {
     if (m_renderPasses.empty())
       return;
 
+#if USE_IMGUI
     App::GetLayer<ImGuiManager>().Render();
+#endif
     auto appContext = App::GetLayer<AppContext>();
 
     auto commandBuffer{SDL_AcquireGPUCommandBuffer(appContext.gpuDevice)};
@@ -90,8 +94,10 @@ namespace Engine {
       TextureToScreenRenderPass presentPass(swapchainTexture, lastRenderTarget,
                                             appContext.logicalPresentation);
       presentPass.Render(commandBuffer);
+#if USE_IMGUI
       ImGUIRenderPass imguiRenderPass(swapchainTexture);
       imguiRenderPass.Render(commandBuffer);
+#endif
     }
 
     SDL_SubmitGPUCommandBuffer(commandBuffer);

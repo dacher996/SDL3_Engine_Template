@@ -6,7 +6,9 @@
 
 #include "Engine/Core/defines.h"
 #include "Engine/Layers/graphics_pipeline_manager.h"
+#if USE_IMGUI
 #include "Engine/Layers/imgui_manager.h"
+#endif
 #include "Engine/Layers/material_manager.h"
 #include "Engine/Layers/scene_manager.h"
 #include "Engine/Layers/texture_manager.h"
@@ -72,7 +74,9 @@ SDL_AppResult Engine::App::Init() {
         AddLayer<MaterialManager>();
         AddLayer<SceneManager>();
         AddLayer<Renderer2D>();
+#if USE_IMGUI
         AddLayer<ImGuiManager>();
+#endif
     }
 
     return SDL_APP_CONTINUE;
@@ -88,10 +92,12 @@ SDL_AppResult Engine::App::Event(SDL_Event *event) {
         }
     }
 
+#if USE_IMGUI
     // If the ImGUI wants to handle events, do not propagate them to the app
     if (GetLayer<ImGuiManager>().HandleEvent(event)) {
         return SDL_APP_CONTINUE;
     }
+#endif
 
     switch (event->type) {
         case SDL_EVENT_WINDOW_RESIZED: {
@@ -129,16 +135,19 @@ SDL_AppResult Engine::App::Iterate() {
         m_lastFrameTime = newTime;
     }
     auto &sceneManager = GetLayer<SceneManager>();
+#if USE_IMGUI
     auto &imguiManager = GetLayer<ImGuiManager>();
-
     imguiManager.StartFrame();
+#endif
     sceneManager.OnUpdate(ctx.deltaTime);
 
     sceneManager.OnRender();
 
+#if USE_IMGUI
     // There might be a case where the renderer doesn't call the ImGui render function
     // So we call it again to finalize the drawings and enable the next frame.
-    imguiManager.Render();
+    GetLayer<ImGuiManager>().Render();
+#endif
 
     return SDL_APP_CONTINUE;
 }
@@ -150,7 +159,9 @@ void Engine::App::Quit(SDL_AppResult result) {
     GetLayer<GraphicsPipelineManager>().Cleanup();
     GetLayer<TextureSamplerManager>().Cleanup();
     GetLayer<TextureManager>().Cleanup();
+#if USE_IMGUI
     GetLayer<ImGuiManager>().Cleanup();
+#endif
 
     if (!m_gpuDevice && !m_window) SDL_ReleaseWindowFromGPUDevice(m_gpuDevice.get(), m_window.get());
 

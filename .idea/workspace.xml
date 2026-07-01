@@ -34,27 +34,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="991b0928-a294-4953-894d-7d91f96387fd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/YourProject.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/include/Engine/Layers/imgui_manager.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/include/Engine/Rendering/RenderPasses/imgui_render_pass.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Engine/Layers/imgui_manager.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Engine/Rendering/RenderPasses/imgui_render_pass.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/App/Scenes/scene_2d.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/App/Scenes/scene_2d.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/Engine/Core/color.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Engine/Core/color.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/Engine/Rendering/render_target_render_pass.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Engine/Rendering/RenderPasses/render_target_render_pass.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/Engine/Core/defines.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Engine/Core/defines.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/Engine/engine.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/Engine/engine.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App/Scenes/scene_2d.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/App/Scenes/scene_2d.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Engine/Core/app.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Engine/Core/app.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Engine/Core/color.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Engine/Core/color.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Engine/Layers/graphics_pipeline_manager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Engine/Layers/graphics_pipeline_manager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Engine/Layers/material_manager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Engine/Layers/material_manager.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Engine/Rendering/2D/renderer_2d.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Engine/Rendering/2D/renderer_2d.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Engine/Rendering/render_target_render_pass.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Engine/Rendering/RenderPasses/render_target_render_pass.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vcpkg.json" beforeDir="false" afterPath="$PROJECT_DIR$/vcpkg.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -193,7 +178,7 @@
       <workItem from="1782487305936" duration="72313000" />
       <workItem from="1782863778601" duration="239000" />
       <workItem from="1782864094662" duration="109000" />
-      <workItem from="1782864211567" duration="547000" />
+      <workItem from="1782864211567" duration="2632000" />
     </task>
     <servers />
   </component>

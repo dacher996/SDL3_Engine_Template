@@ -12,4 +12,7 @@
 #define INITIAL_WINDOW_WIDTH 800
 #define INITIAL_WINDOW_HEIGHT 600
 
+/// Flag that enables ImGUI
+#define USE_IMGUI true
+
 #endif //ENGINE_DEFINES_H
